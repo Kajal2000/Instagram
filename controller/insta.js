@@ -53,7 +53,6 @@ app.post("/loginApi", (req, res) => {
 app.post("/userPost",(req,res)=>{
     var alltoken = req.headers.cookie
     var token = alltoken.split('=undefined')
-    // console.log(token);
     token = (token[token.length - 2]).slice(2, 600)
     jwt.verify(token, 'kajal', (err, data) => {
         var verified_user_id = data["appDB"][0]["User_id"]
@@ -72,6 +71,28 @@ app.post("/userPost",(req,res)=>{
         })
     })
 })
+// Update API for post user which you have posted and u can updated on that
+app.put("/updateApi/:post_id",(req,res)=>{
+    var post_id = req.params.post_id
+    var alltoken = req.headers.cookie
+    var token = alltoken.split('=undefined')
+    token = (token[token.length - 2]).slice(2, 600)
+    jwt.verify(token, 'kajal', (err, data) => {
+        // var verified_user_id = data["appDB"][0]["User_id"]
+        let update_data = {
+            Caption : req.body.Caption,
+            Location : req.body.Location
+        }
+        appDB.update_post(post_id,update_data)
+        .then(()=>{
+            res.send("updated data")
+        }).catch((err)=>{
+            res.send(err)
+            console.log(err);
+        })
+    })
+})
+
 
 // // Getting all the data from database
 // app.get("/getApi",(req,res)=>{
