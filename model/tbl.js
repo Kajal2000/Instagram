@@ -19,7 +19,7 @@ knex.schema.createTable("Userpost", (table) => {
     table.increments("post_id")
     table.string("Caption")
     table.string("Location")
-    table.string("Img/Viedo")
+    table.string("Img_Viedo")
     table.integer("User_id").unsigned()
     table.foreign("User_id").references("SignUp.User_id")
 

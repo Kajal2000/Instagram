@@ -50,17 +50,36 @@ app.post("/loginApi", (req, res) => {
         })
 });
 // post Api for posting pic/caption,location and etc.
-app.post("/post",(req,res)=>{
-    
-})
-
-// Getting all the data from database
-app.get("/getApi",(req,res)=>{
-    var data = appDB.get_data()
-    data.then((res_data)=>{
-        res.send(res_data)
-    }).catch((err)=>{
-        console.log(err)
+app.post("/userPost",(req,res)=>{
+    var alltoken = req.headers.cookie
+    var token = alltoken.split('=undefined')
+    // console.log(token);
+    token = (token[token.length - 2]).slice(2, 600)
+    jwt.verify(token, 'kajal', (err, data) => {
+        var verified_user_id = data["appDB"][0]["User_id"]
+        let Post_data = {
+            Caption : req.body.Caption,
+            Location : req.body.Location,
+            Img_Viedo : req.body.Img_Viedo,
+            User_id : verified_user_id
+        }
+        appDB.post_users(Post_data)
+        .then(()=>{
+            res.send("posted data")
+        }).catch((err)=>{
+            res.send(err)
+            console.log(err);
+        })
     })
 })
+
+// // Getting all the data from database
+// app.get("/getApi",(req,res)=>{
+//     var data = appDB.get_data()
+//     data.then((res_data)=>{
+//         res.send(res_data)
+//     }).catch((err)=>{
+//         console.log(err) 
+//     })
+// })
 module.exports = app;
